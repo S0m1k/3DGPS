@@ -9,12 +9,13 @@
 
 ## 🔴 Blocks running anything (need your machine)
 
-1. **Push access.** This sandbox cannot reach GitHub over git (port 443 blocked for
-   `git push`, though plain HTTP fetch works). All work is committed locally to branch
-   `sprint/beta-pipeline-2026-06-04`. **You need to `git push -u origin
-   sprint/beta-pipeline-2026-06-04`** from your machine, then open a PR. The local repo
+1. **Branch is pushed — open the PR.** Work is on branch
+   `sprint/beta-pipeline-2026-06-04`, already pushed to origin (7 commits, one per
+   sprint unit). Open the PR here:
+   https://github.com/S0m1k/3DGPS/pull/new/sprint/beta-pipeline-2026-06-04
+   (gh CLI isn't installed in this env, so I couldn't open it for you.) The local repo
    lives at `C:\Users\somov\3DGPS` (freshly cloned; it's a nested git repo inside your
-   home dir — that's fine, just never `git add -A` from `C:\Users\somov`).
+   home dir — fine, just never `git add -A` from `C:\Users\somov`).
 
 2. **Conda env not created / not verified.** `pipeline/env.yml` has never been built on
    this machine. Before any pipeline run: `conda env create -f pipeline/env.yml` then
