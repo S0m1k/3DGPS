@@ -262,6 +262,78 @@ with tab_rooms:
 
 # === Tab: Metrics ===
 with tab_metrics:
+    # --- Add-row form ---
+    with st.expander("Добавить запись (metrics row)"):
+        with st.form("add_metrics_row", clear_on_submit=True):
+            fc1, fc2 = st.columns(2)
+            room_val = fc1.text_input("room", placeholder="bedroom / living-room")
+            method_val = fc2.selectbox("method", ["baseline_colmap", "lingbot", "vggt"])
+
+            fn1, fn2, fn3, fn4 = st.columns(4)
+            num_frames_input_val = fn1.number_input("num_frames_input", min_value=0, value=0, step=1)
+            num_frames_used_val = fn2.number_input("num_frames_used", min_value=0, value=0, step=1)
+            blur_threshold_val = fn3.number_input("blur_threshold", min_value=0, value=100, step=1)
+            train_iterations_val = fn4.number_input("train_iterations", min_value=0, value=30000, step=1000)
+
+            ft1, ft2, ft3, ft4 = st.columns(4)
+            train_time_sec_val = ft1.number_input("train_time_sec", min_value=0, value=0, step=1)
+            vram_peak_mb_val = ft2.number_input("vram_peak_mb", min_value=0, value=0, step=1)
+            final_psnr_val = ft3.number_input("final_psnr", min_value=0.0, value=0.0, step=0.01, format="%.2f")
+            splat_count_val = ft4.number_input("splat_count", min_value=0, value=0, step=1000)
+
+            ff1, ff2, ff3, ff4 = st.columns(4)
+            file_size_mb_val = ff1.number_input("file_size_mb", min_value=0.0, value=0.0, step=0.1, format="%.1f")
+            subjective_score_val = ff2.slider("subjective_score_1to10", min_value=1, max_value=10, value=5)
+            wow_val = ff3.selectbox("wow_present_yes_no", ["no", "yes"])
+            artifacts_val = ff4.text_input("artifacts_observed", placeholder="popcorn on ceiling…")
+
+            notes_val = st.text_area("notes", placeholder="free-text run notes", height=68)
+
+            submitted = st.form_submit_button("Добавить строку", type="primary")
+
+        if submitted:
+            import sys as _sys
+            _pipeline_str = str(PIPELINE)
+            if _pipeline_str not in _sys.path:
+                _sys.path.insert(0, _pipeline_str)
+            try:
+                import append_metrics as _am  # type: ignore[import]
+                row: dict = {
+                    "room": room_val.strip(),
+                    "method": method_val,
+                }
+                # Pass numeric fields only when user filled them (non-zero)
+                if num_frames_input_val:
+                    row["num_frames_input"] = str(num_frames_input_val)
+                if num_frames_used_val:
+                    row["num_frames_used"] = str(num_frames_used_val)
+                if blur_threshold_val:
+                    row["blur_threshold"] = str(blur_threshold_val)
+                if train_iterations_val:
+                    row["train_iterations"] = str(train_iterations_val)
+                if train_time_sec_val:
+                    row["train_time_sec"] = str(train_time_sec_val)
+                if vram_peak_mb_val:
+                    row["vram_peak_mb"] = str(vram_peak_mb_val)
+                if final_psnr_val:
+                    row["final_psnr"] = f"{final_psnr_val:.2f}"
+                if splat_count_val:
+                    row["splat_count"] = str(splat_count_val)
+                if file_size_mb_val:
+                    row["file_size_mb"] = f"{file_size_mb_val:.1f}"
+                row["subjective_score_1to10"] = str(subjective_score_val)
+                row["wow_present_yes_no"] = wow_val
+                if artifacts_val.strip():
+                    row["artifacts_observed"] = artifacts_val.strip()
+                if notes_val.strip():
+                    row["notes"] = notes_val.strip()
+                _am.append_row(row, METRICS_CSV)
+                st.success("Запись добавлена в metrics.csv")
+                st.rerun()
+            except Exception as _exc:
+                st.error(f"Ошибка при записи: {_exc}")
+
+    # --- Existing table + filters ---
     df = load_metrics()
     if df.empty:
         st.info(
