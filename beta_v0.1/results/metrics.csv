@@ -1,0 +1,3 @@
+timestamp,room,method,num_frames_input,num_frames_used,blur_threshold,train_iterations,train_time_sec,vram_peak_mb,final_psnr,splat_count,file_size_mb,subjective_score_1to10,wow_present_yes_no,artifacts_observed,notes
+# Example row (delete when adding real data):
+# 2026-06-02T14:30:00,bedroom,baseline_colmap,5400,300,100,30000,2400,7100,28.4,420000,180,7,no,"slight popcorn on ceiling, otherwise clean",first run

@@ -1,0 +1,15 @@
+CLAUDE.md
+.claude/
+node_modules/
+dist/
+.DS_Store
+*.log
+
+# beta data — kept local, not committed
+beta_v0.1/captures/*/
+!beta_v0.1/captures/.gitkeep
+beta_v0.1/results/*/
+beta_v0.1/results/runs/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
