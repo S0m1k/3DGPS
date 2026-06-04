@@ -1,0 +1,6 @@
+# Shell scripts MUST keep LF endings or bash on Windows chokes on `#!/usr/bin/env bash\r`.
+*.sh text eol=lf
+# Python is LF too for consistency across the Linux GPU box and the Windows dev machine.
+*.py text eol=lf
+# Let git auto-handle everything else.
+* text=auto
